@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Web Worker</title>
+</head>
+<body>
+Valor : <input type="text" id="value">
+Resultado: <input type="text" id="result">
+<button onclick="init()">Start</button>
+<script>
+  function init(){
+
+	console.log("[PRINCIPAL] Iniciando worker ... ");
+
+  	//Iniciamos el web worker
+    var worker = new Worker('./js/web_worker.js');
+ 	
+ 	//Añadimos el evenet message para poder comunciarnos con el worker. 
+ 	//El parametro "e" contiene la información procedente del worker.
+	worker.addEventListener('message', function(e)	 {
+	  
+	  	//Contiene el resultado cuando el worker ha finalizado.
+		var total = e.data;
+
+	  	console.log('[PRINCIPAL] Worker responde con total = ', total);
+		
+		//Cargamos en el input "result" el valor obtenido por el worker.
+		document.getElementById("result").value = total;
+
+	}, false);
+
+	//Enviamos al worker el valor introducidon en el input "value"
+ 	worker.postMessage(document.getElementById("value").value);
+
+ 	console.log("[PRINCIPAL] Worker iniciado.");
+   
+  }
+  </script>
+</body>
+</html>
